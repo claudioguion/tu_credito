@@ -1,22 +1,23 @@
 # Tu Crédito API
 
-Tu Crédito API is a Django-based REST API for managing Banks, Clients, and Credits. The project is built using Python 3.11+, Django 5.x, Django REST Framework, and PostgreSQL, and is fully Dockerized for local development. It includes JWT authentication, filtering, searching, pagination, automatic API documentation, and basic security hardening suitable for an assessment submission.
+Tu Crédito API es una REST API basada en Django para la gestión de Bancos, Clientes y Creditos. El proyecto está construido utilizando Python 3.11+, Django 5.x, Django REST Framework y PostgreSQL, y se encuentra completamente containerizado con Docker para el desarrollo local. Incluye JWT authentication, filtering, searching, pagination,
+documentacion automatica, y un conjunto básico de mecanismos de seguridad, adecuado para un assessment técnico.
 
-The project follows a modular architecture with one Django app per domain entity, making it easy to extend and maintain.
+El proyecto sigue una arquitectura modular, con una aplicación de Django por cada entidad de dominio, lo que facilita su extensión, mantenimiento y escalabilidad.
 
 ---
 
 ## Features
 
-- CRUD operations for Banks, Clients, and Credits
-- RESTful API built with Django REST Framework
-- JWT authentication using djangorestframework-simplejwt
-- Filtering, searching, and pagination on all list endpoints
-- Model-level data validation (credit minimum ≤ maximum, client age vs birth date)
-- Centralized API security headers (CSP, Permissions Policy, XSS protection)
-- Automatic API documentation with drf-spectacular (Swagger / Redoc)
-- Dockerized development environment
-- Automated tests using pytest and pytest-django
+- Operaciones CRUD para Bancos, Clientes y Creditos
+- RESTful API construida con Django REST Framework
+- JWT authentication utilizando djangorestframework-simplejwt
+- Filtering, searching y pagination en todos los endpoints de listado
+- Validaciones de datos a nivel de Modelo y Serializers
+- Security headers centralizados (CSP, Permissions Policy, XSS protection)
+- Documentacion automatica de la API con drf-spectacular (Swagger / Redoc)
+- Entorno de desarrollo con Docker-compose (Web y Base de datos)
+- Tests Automatizados utilizando pytest y pytest-django
 
 ---
 
@@ -34,7 +35,7 @@ The project follows a modular architecture with one Django app per domain entity
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 tu_credito/
 ├── apps/
@@ -57,7 +58,9 @@ tu_credito/
 
 ---
 
-## Environment Variables
+## Variables de Entorno
+
+Asegurarse de tener un archivo .env con las siguientes variables:
 
 DEBUG=True
 SECRET_KEY=your-secret-key
@@ -69,18 +72,18 @@ DATABASE_PORT=5432
 
 ---
 
-## Docker Setup
+## Docker Setup para iniciar el proyecto
 
 docker-compose build
 docker-compose up -d
 
-Stop containers:
+Borrar containers:
 
 docker-compose down
 
 ---
 
-## Database Setup
+## Django setup
 
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
@@ -90,26 +93,42 @@ docker-compose exec web python manage.py collectstatic --noinput
 
 ## API Endpoints
 
-Banks: /api/bancos
-Clients: /api/clientes
-Credits: /api/creditos
-Register: /api/auth/register
+Bancos: /api/bancos
+Clientes: /api/clientes
+Creditos: /api/creditos
+Registro de Usuario: /api/auth/register
 Login: /api/auth/login
-Logout: /api/auth/logout
+Logout: /api/auth/logout  # No funciona correctamente
 
 ---
 
 ## Authentication
 
-JWT authentication is required for write operations.
-Use Authorization: Bearer <token>
+Autenticacion via JWT token es requerida para operaciones de creacion, edicion, y borrado.
+Las operaciones Read-Only no requieren token.
+
+Usar Authorization: Bearer <token>
 
 ---
 
-## API Documentation
+## Documentacion de la API
+
+Ubicada en estas URLs
 
 http://localhost:8000/api/docs/
 http://localhost:8000/api/schema/
+
+---
+
+## API Collection
+
+Se incluye una coleccion Postman para ahorrar tiempo al evaluador.
+Copia el siguiente código JavaScript en la pestaña 'settings' del request de Login, para que los tokens se almacenen automáticamente:
+
+const json = pm.response.json();
+
+pm.collectionVariables.set("access_token", json.access);
+pm.collectionVariables.set("refresh_token", json.refresh);
 
 ---
 
@@ -119,7 +138,11 @@ docker-compose exec web pytest
 
 ---
 
-## Security
+## Seguridad
+
+Se desarrollo un middleware a medida para gestionar Content Security Policy (CSP) y Permissions Policy. Este middleware se ubica en el directorio 'apps\utils\middleware.py'.
+
+Tambien se incluyen las siguientes configuraciones en los settings de Django:
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -127,6 +150,25 @@ X_FRAME_OPTIONS = DENY
 
 ---
 
-## License
+## Fallas y comportamientos extraños
+
+Se intento implementar un mecanismo de logout utilizando 'rest_framework_simplejwt.token_blacklist' para deshabilitar el access_token desde el backend, sin embargo, el endpoint no esta funcional por el momento.
+
+Tambien, la API es extremadamente sensible con los trailing slash ('/') en los endpoints (Ej: /api/bancos/). Especialmente, las operaciones de escritura necesariamente siempre deben llevar slash al final de la URL.
+
+---
+
+## Uso de IA
+
+Se utilizo ChatGPT en los siguientes escenarios:
+
+- Agilizar la puesta a punto de los containers con Docker
+- Compañero de Code Review, especialmente durante el debug
+- Implementar Content Security Policy (CSP) y Permissions Policy
+- Acelerar el desarrollo de los Tests
+
+---
+
+## Licencia
 
 MIT License

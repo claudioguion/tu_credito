@@ -1,231 +1,638 @@
 {
-    "info": {
-      "name": "Tu Crédito API",
-      "description": "Postman collection for Tu Crédito API (Banks, Clients, Credits, Auth)",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "variable": [
-      {
-        "key": "base_url",
-        "value": "http://localhost:8000"
-      },
-      {
-        "key": "access_token",
-        "value": ""
-      },
-      {
-        "key": "refresh_token",
-        "value": ""
-      }
-    ],
-    "item": [
-      {
-        "name": "Auth",
-        "item": [
-          {
-            "name": "Register",
-            "request": {
-              "method": "POST",
-              "header": [
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/auth/register/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "auth", "register"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPassword123\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
-              }
-            }
-          },
-          {
-            "name": "Login (Get JWT)",
-            "event": [
-              {
-                "listen": "test",
-                "script": {
-                  "exec": [
-                    "var json = pm.response.json();",
-                    "pm.environment.set('access_token', json.access);",
-                    "pm.environment.set('refresh_token', json.refresh);"
-                  ]
-                }
-              }
-            ],
-            "request": {
-              "method": "POST",
-              "header": [
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/auth/token/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "auth", "token"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPassword123\"\n}"
-              }
-            }
-          },
-          {
-            "name": "Refresh Token",
-            "request": {
-              "method": "POST",
-              "header": [
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/auth/token/refresh/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "auth", "token", "refresh"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
-              }
-            }
-          },
-          {
-            "name": "Logout",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Authorization",
-                  "value": "Bearer {{access_token}}"
-                },
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/auth/logout/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "auth", "logout"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "Banks",
-        "item": [
-          {
-            "name": "List Banks",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{base_url}}/api/bancos/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "bancos"]
-              }
-            }
-          },
-          {
-            "name": "Create Bank",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Authorization",
-                  "value": "Bearer {{access_token}}"
-                },
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/bancos/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "bancos"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Banco ABC\",\n  \"type\": \"PRIVADO\",\n  \"address\": \"Main Street 123\"\n}"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "Clients",
-        "item": [
-          {
-            "name": "List Clients",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{base_url}}/api/clients/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "clients"]
-              }
-            }
-          },
-          {
-            "name": "Create Client",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Authorization",
-                  "value": "Bearer {{access_token}}"
-                },
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/clients/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "clients"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"full_name\": \"Jane Doe\",\n  \"birth_date\": \"1990-01-01\",\n  \"age\": 34,\n  \"nationality\": \"US\",\n  \"address\": \"Street 456\",\n  \"email\": \"jane@example.com\",\n  \"telephone\": \"123456789\",\n  \"person_type\": \"NATURAL\",\n  \"bank\": 1\n}"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "name": "Credits",
-        "item": [
-          {
-            "name": "List Credits",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{base_url}}/api/credits/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "credits"]
-              }
-            }
-          },
-          {
-            "name": "Create Credit",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Authorization",
-                  "value": "Bearer {{access_token}}"
-                },
-                { "key": "Content-Type", "value": "application/json" }
-              ],
-              "url": {
-                "raw": "{{base_url}}/api/credits/",
-                "host": ["{{base_url}}"],
-                "path": ["api", "credits"]
-              },
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"client\": 1,\n  \"description\": \"Auto loan\",\n  \"minimum_payment\": \"100.00\",\n  \"maximum_payment\": \"500.00\",\n  \"term_months\": 24,\n  \"bank\": 1,\n  \"credit_type\": \"AUTOMOTRIZ\"\n}"
-              }
-            }
-          }
-        ]
-      }
-    ]
-  }
-  
+	"info": {
+		"_postman_id": "47689478-62a2-42a2-99e0-4b2640a697f4",
+		"name": "Tu Crédito API — Full CRUD",
+		"description": "CRUD Completo para Bancos, Clientes, y Creditos; con JWT authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23642464"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Registrar Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = pm.response.json();\r",
+									"\r",
+									"pm.collectionVariables.set(\"access_token\", json.access);\r",
+									"pm.collectionVariables.set(\"refresh_token\", json.refresh);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"claudioguion@gmail.com\",\n  \"password\": \"Hola.1234\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/token/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout (NO FUNCIONA)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bancos — Full CRUD",
+			"item": [
+				{
+					"name": "Lista Bancos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/bancos/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detalle Banco",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/bancos/{{bank_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								"{{bank_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Banco",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Banco Demo2\",\n  \"type\": \"PRIVADO\",\n  \"address\": \"Main Street 123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bancos/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Banco (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Banco Updated\",\n  \"type\": \"GOBIERNO\",\n  \"address\": \"Updated Address\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bancos/{{bank_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								"{{bank_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Banco Parcial (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"Banco Patch\" }"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/bancos/{{bank_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								"{{bank_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Banco",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/bancos/{{bank_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"bancos",
+								"{{bank_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clientes — Full CRUD",
+			"item": [
+				{
+					"name": "Lista Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clientes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detalle Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/clientes/2/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"John Doe9\",\n  \"birth_date\": \"1990-01-01\",\n  \"age\": 35,\n  \"nationality\": \"US\",\n  \"address\": \"Client Street\",\n  \"email\": \"john@example.com\",\n  \"telephone\": \"123456\",\n  \"person_type\": \"NATURAL\",\n  \"bank\": 1,\n  \"document_id\": \"asdaskdbasd\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clientes/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Cliente (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"John Doe Updated\",\n  \"birth_date\": \"1990-01-01\",\n  \"age\": 35,\n  \"nationality\": \"US\",\n  \"address\": \"Updated Address\",\n  \"email\": \"john@example.com\",\n  \"telephone\": \"999999\",\n  \"person_type\": \"NATURAL\",\n  \"bank\": 1,\n  \"document_id\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clientes/2/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Cliente Parcial (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"telephone\": \"888888\" }"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clientes/2/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/clientes/2/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"clientes",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Creditos — Full CRUD",
+			"item": [
+				{
+					"name": "Lista Creditos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/creditos/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Detalle Credito",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/creditos/{{credit_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"{{credit_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Credito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client\": 4,\n  \"description\": \"Auto Credit\",\n  \"minimum_payment\": 100.00,\n  \"maximum_payment\": 500.00,\n  \"term_months\": 12,\n  \"bank\": 15,\n  \"credit_type\": \"AUTOMOTRIZ\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/creditos/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Credito (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"client\": 4,\n  \"description\": \"Updated Credit\",\n  \"minimum_payment\": 150.00,\n  \"maximum_payment\": 600.00,\n  \"term_months\": 24,\n  \"bank\": 15,\n  \"credit_type\": \"COMERCIAL\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/creditos/{{credit_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"{{credit_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Credito Parcial (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"description\": \"Patch Credit\" }"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/creditos/{{credit_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"{{credit_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Credito",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/creditos/{{credit_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"creditos",
+								"{{credit_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "bank_id",
+			"value": "1"
+		},
+		{
+			"key": "client_id",
+			"value": "1"
+		},
+		{
+			"key": "credit_id",
+			"value": "1"
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		}
+	]
+}
