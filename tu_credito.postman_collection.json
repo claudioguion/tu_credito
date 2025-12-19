@@ -1,0 +1,231 @@
+{
+    "info": {
+      "name": "Tu Crédito API",
+      "description": "Postman collection for Tu Crédito API (Banks, Clients, Credits, Auth)",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      {
+        "key": "base_url",
+        "value": "http://localhost:8000"
+      },
+      {
+        "key": "access_token",
+        "value": ""
+      },
+      {
+        "key": "refresh_token",
+        "value": ""
+      }
+    ],
+    "item": [
+      {
+        "name": "Auth",
+        "item": [
+          {
+            "name": "Register",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/auth/register/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "auth", "register"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPassword123\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"
+              }
+            }
+          },
+          {
+            "name": "Login (Get JWT)",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var json = pm.response.json();",
+                    "pm.environment.set('access_token', json.access);",
+                    "pm.environment.set('refresh_token', json.refresh);"
+                  ]
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/auth/token/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "auth", "token"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"StrongPassword123\"\n}"
+              }
+            }
+          },
+          {
+            "name": "Refresh Token",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/auth/token/refresh/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "auth", "token", "refresh"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+              }
+            }
+          },
+          {
+            "name": "Logout",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/auth/logout/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "auth", "logout"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Banks",
+        "item": [
+          {
+            "name": "List Banks",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/bancos/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "bancos"]
+              }
+            }
+          },
+          {
+            "name": "Create Bank",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/bancos/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "bancos"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"Banco ABC\",\n  \"type\": \"PRIVADO\",\n  \"address\": \"Main Street 123\"\n}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Clients",
+        "item": [
+          {
+            "name": "List Clients",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/clients/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "clients"]
+              }
+            }
+          },
+          {
+            "name": "Create Client",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/clients/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "clients"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"full_name\": \"Jane Doe\",\n  \"birth_date\": \"1990-01-01\",\n  \"age\": 34,\n  \"nationality\": \"US\",\n  \"address\": \"Street 456\",\n  \"email\": \"jane@example.com\",\n  \"telephone\": \"123456789\",\n  \"person_type\": \"NATURAL\",\n  \"bank\": 1\n}"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Credits",
+        "item": [
+          {
+            "name": "List Credits",
+            "request": {
+              "method": "GET",
+              "url": {
+                "raw": "{{base_url}}/api/credits/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "credits"]
+              }
+            }
+          },
+          {
+            "name": "Create Credit",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{access_token}}"
+                },
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "url": {
+                "raw": "{{base_url}}/api/credits/",
+                "host": ["{{base_url}}"],
+                "path": ["api", "credits"]
+              },
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"client\": 1,\n  \"description\": \"Auto loan\",\n  \"minimum_payment\": \"100.00\",\n  \"maximum_payment\": \"500.00\",\n  \"term_months\": 24,\n  \"bank\": 1,\n  \"credit_type\": \"AUTOMOTRIZ\"\n}"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+  

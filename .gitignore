@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Django stuff
+*.log
+db.sqlite3
+
+# Environment variables
+.env
+
+# Virtual environments
+.venv/
+venv/
+
+# Docker volumes (Postgres data)
+postgres_data/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Othera
+.docker/
+*.log
+staticfiles/
