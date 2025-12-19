@@ -63,7 +63,7 @@ tu_credito/
 ## Variables de Entorno
 
 Asegurarse de tener un archivo .env con las siguientes variables:
-
+```text
 DEBUG=True
 SECRET_KEY=your-secret-key
 DATABASE_NAME=tu_credito
@@ -71,7 +71,7 @@ DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 DATABASE_HOST=db
 DATABASE_PORT=5432
-
+```
 ---
 
 ## Docker Setup para iniciar el proyecto
@@ -86,22 +86,22 @@ docker-compose down
 ---
 
 ## Django setup
-
+```text
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --noinput
-
+```
 ---
 
 ## API Endpoints
-
+```text
 Bancos: /api/bancos
 Clientes: /api/clientes
 Creditos: /api/creditos
 Registro de Usuario: /api/auth/register
 Login: /api/auth/login
 Logout: /api/auth/logout  # No funciona correctamente
-
+```
 ---
 
 ## Authentication
@@ -116,28 +116,28 @@ Usar Authorization: Bearer <token>
 ## Documentacion de la API
 
 Ubicada en estas URLs
-
+```text
 http://localhost:8000/api/docs/
 http://localhost:8000/api/schema/
-
+```
 ---
 
 ## API Collection
 
 Se incluye una coleccion Postman para ahorrar tiempo al evaluador.
 Copia el siguiente código JavaScript en la pestaña 'settings' del request de Login, para que los tokens se almacenen automáticamente:
-
+```text
 const json = pm.response.json();
 
 pm.collectionVariables.set("access_token", json.access);
 pm.collectionVariables.set("refresh_token", json.refresh);
-
+```
 ---
 
 ## Testing
-
+```text
 docker-compose exec web pytest
-
+```
 ---
 
 ## Seguridad
@@ -145,11 +145,11 @@ docker-compose exec web pytest
 Se desarrollo un middleware a medida para gestionar Content Security Policy (CSP) y Permissions Policy. Este middleware se ubica en el directorio 'apps\utils\middleware.py'.
 
 Tambien se incluyen las siguientes configuraciones en los settings de Django:
-
-- SECURE_BROWSER_XSS_FILTER = True
-- SECURE_CONTENT_TYPE_NOSNIFF = True
-- X_FRAME_OPTIONS = DENY
-
+```text
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = DENY
+```
 ---
 
 ## Fallas y comportamientos extraños
