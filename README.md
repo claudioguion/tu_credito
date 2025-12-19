@@ -37,6 +37,7 @@ El proyecto sigue una arquitectura modular, con una aplicación de Django por ca
 
 ## Estructura del proyecto
 
+```text
 tu_credito/
 ├── apps/
 │   ├── banks/
@@ -55,6 +56,7 @@ tu_credito/
 ├── requirements.txt
 ├── .env
 └── README.md
+```
 
 ---
 
@@ -144,9 +146,9 @@ Se desarrollo un middleware a medida para gestionar Content Security Policy (CSP
 
 Tambien se incluyen las siguientes configuraciones en los settings de Django:
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = DENY
+- SECURE_BROWSER_XSS_FILTER = True
+- SECURE_CONTENT_TYPE_NOSNIFF = True
+- X_FRAME_OPTIONS = DENY
 
 ---
 
